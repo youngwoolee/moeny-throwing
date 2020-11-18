@@ -1,5 +1,6 @@
 package com.pay.money.throwing.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -38,4 +39,14 @@ public class ThrowingMoney {
     private boolean isExpired;
 
 
+    @Builder
+    public ThrowingMoney(Long userId, String roomId, String token, BigDecimal money, int personCount) {
+        this.userId = userId;
+        this.roomId = roomId;
+        this.token = token;
+        this.money = money;
+        this.personCount = personCount;
+        this.createdAt = LocalDateTime.now();
+        this.isExpired = false;
+    }
 }
