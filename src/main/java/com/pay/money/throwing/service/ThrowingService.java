@@ -3,15 +3,19 @@ package com.pay.money.throwing.service;
 import com.pay.money.throwing.domain.ReceivingMoney;
 import com.pay.money.throwing.domain.ThrowingMoney;
 import com.pay.money.throwing.endpoint.controller.request.ThrowingMoneyRequest;
+import com.pay.money.throwing.repository.ReceivingRepository;
 import com.pay.money.throwing.repository.ThrowingRepository;
 import com.pay.money.throwing.util.RandomMoneyDistributor;
 import com.pay.money.throwing.util.TokenGeneratorStrategy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
@@ -22,6 +26,7 @@ public class ThrowingService {
     private final TokenGeneratorStrategy tokenGenerator;
     private final RandomMoneyDistributor randomDistributor;
     private final ThrowingRepository throwingRepository;
+    private final ReceivingRepository receivingRepository;
 
     private void save(ThrowingMoney throwingMoney) {
         throwingRepository.save(throwingMoney);
@@ -58,6 +63,18 @@ public class ThrowingService {
     }
 
 
+    @Transactional
+    public BigDecimal receiving(Long userId, String roomId, String token) {
 
+        ThrowingMoney throwingMoney = throwingRepository.findByToken(token).orElseThrow(() -> new RuntimeException("해당 뿌리기 건이 없습니다"));
 
+        ReceivingMoney receivingMoney = receivingRepository.findFirstByThrowingMoneyIdAndIsReceivedFalseOrderBySequence(throwingMoney.getId());
+
+        if(ObjectUtils.isEmpty(receivingMoney)) {
+            throw new RuntimeException("받을 돈이 없습니다");
+        }
+        receivingMoney.receiving();
+        return receivingMoney.getMoney();
+
+    }
 }

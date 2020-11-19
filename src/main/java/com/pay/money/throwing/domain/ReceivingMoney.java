@@ -48,4 +48,7 @@ public class ReceivingMoney {
         this.throwingMoney = throwingMoney;
     }
 
+    public void receiving() {
+        this.isReceived = true;
+    }
 }

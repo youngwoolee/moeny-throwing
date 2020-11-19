@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -22,6 +23,15 @@ public class ApiThrowingController {
         String token = throwingService.save(userId, roomId, throwingMoneyRequest);
 
         return token;
+    }
+
+    @PatchMapping("/money/throwing")
+    public BigDecimal receiving(@RequestHeader("X-USER-ID") Long userId,
+                                @RequestHeader("X-ROOM-ID") String roomId,
+                                @RequestHeader("X-TOKEN") String token) {
+
+        BigDecimal money = throwingService.receiving(userId, roomId, token);
+        return money;
     }
 
 
