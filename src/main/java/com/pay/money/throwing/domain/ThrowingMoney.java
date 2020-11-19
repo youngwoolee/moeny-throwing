@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Entity
+@Table(indexes = {@Index(name = "token_index",unique = true, columnList="token")})
 public class ThrowingMoney {
 
     @Id
