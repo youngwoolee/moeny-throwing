@@ -73,7 +73,7 @@ public class ThrowingService {
         if(ObjectUtils.isEmpty(receivingMoney)) {
             throw new RuntimeException("받을 돈이 없습니다");
         }
-        receivingMoney.receiving();
+        receivingMoney.receiving(userId);
         return receivingMoney.getMoney();
 
     }
