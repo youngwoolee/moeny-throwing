@@ -16,8 +16,6 @@ import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @RequiredArgsConstructor
@@ -67,7 +65,7 @@ public class ThrowingService {
 
         ThrowingMoney throwingMoney = throwingRepository.findByToken(token).orElseThrow(() -> new RuntimeException("해당 뿌리기 건이 없습니다"));
 
-        ReceivingMoney receivingMoney = receivingRepository.findFirstByThrowingMoneyIdAndIsReceivedFalseOrderBySequence(throwingMoney.getId());
+        ReceivingMoney receivingMoney = receivingRepository.findFirstByThrowingMoneyIdAndIsReceivedFalse(throwingMoney.getId());
 
         if(ObjectUtils.isEmpty(receivingMoney)) {
             throw new RuntimeException("받을 돈이 없습니다");
@@ -81,7 +79,7 @@ public class ThrowingService {
 
         ThrowingMoney throwingMoney = throwingRepository.findByToken(token).orElseThrow(() -> new RuntimeException("해당 뿌리기 건이 없습니다"));
 
-        List<ReceivingMoney> receivingMoneyList = receivingRepository.findByThrowingMoneyIdAndIsReceivedTrueOrderBySequence(throwingMoney.getId());
+        List<ReceivingMoney> receivingMoneyList = receivingRepository.findByThrowingMoneyIdAndIsReceivedTrue(throwingMoney.getId());
 
         ThrowingMoneyResponse throwingMoneyResponse = ThrowingMoneyResponse.valueOf(throwingMoney.getCreatedAt(), throwingMoney.getMoney(), receivingMoneyList);
 

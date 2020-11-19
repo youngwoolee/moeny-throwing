@@ -6,7 +6,8 @@ import java.util.List;
 
 public interface ReceivingRepository extends JpaRepository<ReceivingMoney, Long> {
 
-    ReceivingMoney findFirstByThrowingMoneyIdAndIsReceivedFalseOrderBySequence(Long id);
+    ReceivingMoney findFirstByThrowingMoneyIdAndIsReceivedFalse(Long id);
 
-    List<ReceivingMoney> findByThrowingMoneyIdAndIsReceivedTrueOrderBySequence(Long id);
+    List<ReceivingMoney> findByThrowingMoneyIdAndIsReceivedTrue(Long id);
 }
+
