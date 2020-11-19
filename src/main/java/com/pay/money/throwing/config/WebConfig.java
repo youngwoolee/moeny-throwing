@@ -1,5 +1,6 @@
 package com.pay.money.throwing.config;
 
+import com.pay.money.throwing.util.RandomMoneyDistributor;
 import com.pay.money.throwing.util.RandomTokenGenerator;
 import com.pay.money.throwing.util.TokenGeneratorStrategy;
 import org.springframework.context.annotation.Bean;
@@ -13,5 +14,10 @@ public class WebConfig {
     @Bean
     public TokenGeneratorStrategy tokenGenerator() {
         return RandomTokenGenerator.of(LIMIT_SIZE);
+    }
+
+    @Bean
+    public RandomMoneyDistributor randomDistributor() {
+        return new RandomMoneyDistributor();
     }
 }
