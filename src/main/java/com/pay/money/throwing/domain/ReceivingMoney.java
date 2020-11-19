@@ -31,20 +31,16 @@ public class ReceivingMoney {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    @Column(nullable = false)
-    private int sequence;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "throwing_money_id")
     private ThrowingMoney throwingMoney;
 
     @Builder
-    public ReceivingMoney(String roomId, BigDecimal money, boolean isReceived, LocalDateTime updatedAt, int sequence, ThrowingMoney throwingMoney) {
+    public ReceivingMoney(String roomId, BigDecimal money, boolean isReceived, LocalDateTime updatedAt, ThrowingMoney throwingMoney) {
         this.roomId = roomId;
         this.money = money;
         this.isReceived = isReceived;
         this.updatedAt = updatedAt;
-        this.sequence = sequence;
         this.throwingMoney = throwingMoney;
     }
 
