@@ -1,5 +1,6 @@
 package com.pay.money.throwing.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -14,7 +17,7 @@ import java.time.LocalDateTime;
 public class ThrowingMoney {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -38,6 +41,9 @@ public class ThrowingMoney {
     @Column(nullable = false)
     private boolean isExpired;
 
+    @OneToMany(mappedBy = "throwingMoney", cascade = CascadeType.ALL)
+    private List<ReceivingMoney> receivingMoneyList = new ArrayList<>();
+
 
     @Builder
     public ThrowingMoney(Long userId, String roomId, String token, BigDecimal money, int personCount) {
@@ -48,5 +54,9 @@ public class ThrowingMoney {
         this.personCount = personCount;
         this.createdAt = LocalDateTime.now();
         this.isExpired = false;
+    }
+
+    public void addReceivingMoney(ReceivingMoney receivingMoneyList) {
+        this.receivingMoneyList.add(receivingMoneyList);
     }
 }
