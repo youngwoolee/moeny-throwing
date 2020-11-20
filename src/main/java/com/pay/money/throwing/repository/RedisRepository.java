@@ -14,14 +14,14 @@ import java.util.concurrent.TimeUnit;
 @Repository
 public class RedisRepository {
 
-    private static final int EXPIRE_MINUTES = 30;
+    private static final int EXPIRE_MINUTES = 10;
 
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
     public void set(String key, Object value) {
         ValueOperations<String, Object> vop = redisTemplate.opsForValue();
-        vop.set(key, value, EXPIRE_MINUTES, TimeUnit.SECONDS);
+        vop.set(key, value, EXPIRE_MINUTES, TimeUnit.MINUTES);
     }
 
     public ReceivingMoneyDto get(String key) {

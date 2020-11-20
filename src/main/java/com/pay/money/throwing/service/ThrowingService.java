@@ -21,13 +21,11 @@ import java.math.BigDecimal;
 @RequiredArgsConstructor
 public class ThrowingService {
 
-    private static final int EXPIRE_DAY = 7;
-
     private final TokenGeneratorStrategy tokenGenerator;
     private final ThrowingRepository throwingRepository;
-    private final ReceivingRepository receivingRepository;
     private final ThrowingReadRepository throwingReadRepository;
     private final RedisService redisService;
+    private final ValidationService validationService;
 
     public String throwing(Long userId, String roomId, ThrowingMoneyRequest throwingMoneyRequest) {
         //TODO: token 중복 체크
@@ -58,9 +56,7 @@ public class ThrowingService {
         ThrowingMoney findThrowingMoney = throwingReadRepository.findByToken(token)
                 .orElseThrow(ErrorCode.IS_NOT_EXIST_THROWING_MONEY::exception);
 
-        if(findThrowingMoney.isReceived(userId)) {
-            throw new ApiSystemException(ErrorCode.IS_ALREADY_RECEIVE_USER);
-        }
+        validationService.receiveUser(userId, findThrowingMoney);
 
         ReceivingMoney saveReceivingMoney = receivingMoneyDto.toEntity(userId, roomId, findThrowingMoney);
 
@@ -74,14 +70,9 @@ public class ThrowingService {
         ThrowingMoney throwingMoney = throwingReadRepository.findByToken(token)
                 .orElseThrow(ErrorCode.IS_NOT_EXIST_THROWING_MONEY::exception);
 
-        if(!throwingMoney.isSameUser(userId)) {
-            throw new ApiSystemException(ErrorCode.CAN_SHOW_ONLY_OWNER);
-        }
-
-        if(throwingMoney.isExpired(EXPIRE_DAY)) {
-            throw new ApiSystemException(ErrorCode.IS_EXPIRED_SHOW_DATE);
-        }
+        validationService.sameUserAndExpired(userId, throwingMoney);
 
         return ThrowingMoneyResponse.of(throwingMoney);
     }
+
 }
