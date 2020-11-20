@@ -5,6 +5,7 @@ import com.pay.money.throwing.domain.ThrowingMoney;
 import com.pay.money.throwing.endpoint.controller.request.ThrowingMoneyRequest;
 import com.pay.money.throwing.endpoint.controller.response.ThrowingMoneyResponse;
 import com.pay.money.throwing.repository.ReceivingRepository;
+import com.pay.money.throwing.repository.ThrowingReadRepository;
 import com.pay.money.throwing.repository.ThrowingRepository;
 import com.pay.money.throwing.service.pojo.ReceivingMoneyDto;
 import com.pay.money.throwing.util.RandomMoneyDistributor;
@@ -29,6 +30,7 @@ public class ThrowingService {
     private final RandomMoneyDistributor randomDistributor;
     private final ThrowingRepository throwingRepository;
     private final ReceivingRepository receivingRepository;
+    private final ThrowingReadRepository throwingReadRepository;
     private final RedisService redisService;
 
     private void save(ThrowingMoney throwingMoney) {
@@ -94,7 +96,7 @@ public class ThrowingService {
         receivingMoneyDto.validateNotSameUserAndSameRoom(userId, roomId);
 
         //TODO: 조인결과를 가져와야함
-        ThrowingMoney throwingMoney = throwingRepository.findByToken(token).orElseThrow(() -> new RuntimeException("해당 뿌리기 건이 없습니다"));
+        ThrowingMoney throwingMoney = throwingReadRepository.findByToken(token).orElseThrow(() -> new RuntimeException("해당 뿌리기 건이 없습니다"));
 
         ReceivingMoney receivingMoney = ReceivingMoney.builder()
                 .roomId(throwingMoney.getRoomId())
@@ -112,8 +114,7 @@ public class ThrowingService {
 
     public ThrowingMoneyResponse show(Long userId, String roomId, String token) {
 
-
-        ThrowingMoney throwingMoney = throwingRepository.findByToken(token).orElseThrow(() -> new RuntimeException("해당 뿌리기 건이 없습니다"));
+        ThrowingMoney throwingMoney = throwingReadRepository.findByToken(token).orElseThrow(() -> new RuntimeException("해당 뿌리기 건이 없습니다"));
 
         //TODO: 자기 자신만 조회 가능
         if(!throwingMoney.isSameUser(userId)) {
@@ -124,9 +125,7 @@ public class ThrowingService {
             throw new RuntimeException("조회 만료 일자가 지났습니다");
         }
 
-        List<ReceivingMoney> receivingMoneyList = receivingRepository.findByThrowingMoneyId(throwingMoney.getId());
-
-        ThrowingMoneyResponse throwingMoneyResponse = ThrowingMoneyResponse.valueOf(throwingMoney.getCreatedAt(), throwingMoney.getMoney(), receivingMoneyList);
+        ThrowingMoneyResponse throwingMoneyResponse = ThrowingMoneyResponse.valueOf(throwingMoney.getCreatedAt(), throwingMoney.getMoney(), throwingMoney.getReceivingMoneyList());
 
         return throwingMoneyResponse;
     }
