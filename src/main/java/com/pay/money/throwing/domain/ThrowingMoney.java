@@ -42,7 +42,7 @@ public class ThrowingMoney {
     @Column(nullable = false)
     private boolean isExpired;
 
-    @OneToMany(mappedBy = "throwingMoney", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "throwingMoney", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ReceivingMoney> receivingMoneyList = new ArrayList<>();
 
 

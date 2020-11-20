@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Entity
+@Table(indexes = {@Index(name = "room_user_index",unique = true, columnList="roomId, userId")})
 public class ReceivingMoney {
 
     @Id
@@ -23,10 +24,8 @@ public class ReceivingMoney {
     @Column(nullable = false)
     private BigDecimal money;
 
-    private Long userId;
-
     @Column(nullable = false)
-    private boolean isReceived;
+    private Long userId;
 
     @Column(nullable = false)
     private LocalDateTime updatedAt;
@@ -36,17 +35,16 @@ public class ReceivingMoney {
     private ThrowingMoney throwingMoney;
 
     @Builder
-    public ReceivingMoney(String roomId, BigDecimal money, boolean isReceived, LocalDateTime updatedAt, ThrowingMoney throwingMoney) {
+    public ReceivingMoney(String roomId, BigDecimal money, Long userId, LocalDateTime updatedAt, ThrowingMoney throwingMoney) {
         this.roomId = roomId;
         this.money = money;
-        this.isReceived = isReceived;
+        this.userId = userId;
         this.updatedAt = updatedAt;
         this.throwingMoney = throwingMoney;
     }
 
     public void receiving(Long userId) {
         this.userId = userId;
-        this.isReceived = true;
         this.updatedAt = LocalDateTime.now();
     }
 }
