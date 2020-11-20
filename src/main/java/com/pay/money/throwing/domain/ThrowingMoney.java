@@ -60,4 +60,13 @@ public class ThrowingMoney {
     public void addReceivingMoney(ReceivingMoney receivingMoneyList) {
         this.receivingMoneyList.add(receivingMoneyList);
     }
+
+    public boolean isSameUser(Long userId) {
+        return this.userId.equals(userId);
+    }
+
+    public boolean isExpired(int expiredDay) {
+        return LocalDateTime.now().minusDays(expiredDay).isAfter(this.createdAt);
+    }
+
 }

@@ -23,6 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ThrowingService {
 
+    private static final int EXPIRE_DAY = 7;
 
     private final TokenGeneratorStrategy tokenGenerator;
     private final RandomMoneyDistributor randomDistributor;
@@ -97,7 +98,7 @@ public class ThrowingService {
 
         ReceivingMoney receivingMoney = ReceivingMoney.builder()
                 .roomId(throwingMoney.getRoomId())
-                .money(receivingMoneyDto.getDistributeMoney(0))
+                .money(receivingMoneyDto.getDistributeMoney(1))
                 .userId(userId)
                 .updatedAt(LocalDateTime.now())
                 .throwingMoney(throwingMoney)
@@ -111,7 +112,17 @@ public class ThrowingService {
 
     public ThrowingMoneyResponse show(Long userId, String roomId, String token) {
 
+
         ThrowingMoney throwingMoney = throwingRepository.findByToken(token).orElseThrow(() -> new RuntimeException("해당 뿌리기 건이 없습니다"));
+
+        //TODO: 자기 자신만 조회 가능
+        if(!throwingMoney.isSameUser(userId)) {
+            throw new RuntimeException("본인만 조회 가능합니다");
+        }
+        //TODO: 7일동안만 조회 가능
+        if(throwingMoney.isExpired(EXPIRE_DAY)) {
+            throw new RuntimeException("조회 만료 일자가 지났습니다");
+        }
 
         List<ReceivingMoney> receivingMoneyList = receivingRepository.findByThrowingMoneyId(throwingMoney.getId());
 
