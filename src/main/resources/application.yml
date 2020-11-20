@@ -4,6 +4,10 @@ spring:
 ---
 profiles: local
 spring:
+  redis:
+    #    host: localhost
+    host: 192.168.99.100
+    port: 6379
   h2:
     console:
       enabled: true
