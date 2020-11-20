@@ -2,6 +2,8 @@ package com.pay.money.throwing.service.pojo;
 
 import com.pay.money.throwing.domain.ReceivingMoney;
 import com.pay.money.throwing.domain.ThrowingMoney;
+import com.pay.money.throwing.error.exception.ApiSystemException;
+import com.pay.money.throwing.error.ErrorCode;
 import lombok.Getter;
 
 import java.io.Serializable;
@@ -30,17 +32,17 @@ public class ReceivingMoneyDto implements Serializable {
 
     public void validateNotSameUserAndSameRoom(Long userId, String roomId) {
         if(this.userId.equals(userId)) {
-            throw new RuntimeException("뿌린사람은 받을 수 없습니다");
+            throw new ApiSystemException(ErrorCode.CAN_RECEIVE_ONLY_OWNER);
         }
 
         if(!this.roomId.equals(roomId)) {
-            throw new RuntimeException("같은 방이 아니면 받을 수 없습니다");
+            throw new ApiSystemException(ErrorCode.CAN_RECEIVE_SAME_ROOM);
         }
     }
 
     public BigDecimal getDistributeMoney(int sequence) {
         if(distributeMoneyList.isEmpty() || distributeMoneyList.size() <= sequence) {
-            throw new RuntimeException("분배할 돈이 없습니다");
+            throw new ApiSystemException(ErrorCode.IS_NOT_ENOUGH_DISTRIBUTE_MONEY);
         }
         return distributeMoneyList.get(sequence);
     }

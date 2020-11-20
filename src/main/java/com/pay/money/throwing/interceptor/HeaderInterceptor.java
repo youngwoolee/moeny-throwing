@@ -1,6 +1,8 @@
 package com.pay.money.throwing.interceptor;
 
 import com.pay.money.throwing.constant.HeaderName;
+import com.pay.money.throwing.error.exception.ApiSystemException;
+import com.pay.money.throwing.error.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
@@ -27,7 +29,7 @@ public class HeaderInterceptor implements HandlerInterceptor {
         }
 
         if(isEmptyUserId || isEmptyRoomId || isEmptyToken) {
-            throw new RuntimeException("필수 헤더값이 없습니다");
+            throw new ApiSystemException(ErrorCode.IS_NOT_EXIST_NECESSARY_HEADER);
         }
         return true;
     }

@@ -43,8 +43,4 @@ public class ReceivingMoney {
         this.throwingMoney = throwingMoney;
     }
 
-    public void receiving(Long userId) {
-        this.userId = userId;
-        this.updatedAt = LocalDateTime.now();
-    }
 }

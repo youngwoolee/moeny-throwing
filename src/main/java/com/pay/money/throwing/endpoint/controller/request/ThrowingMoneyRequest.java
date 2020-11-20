@@ -1,25 +1,31 @@
 package com.pay.money.throwing.endpoint.controller.request;
 
 import com.pay.money.throwing.domain.ThrowingMoney;
+import com.pay.money.throwing.error.exception.ApiSystemException;
+import com.pay.money.throwing.error.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class ThrowingMoneyRequest {
+
+    @NotNull
     private BigDecimal money;
-    private int personCount;
+    @NotNull
+    private Integer personCount;
 
     public void validationThenException() {
         if(isMoneyLessThanZero()) {
-            throw new RuntimeException("뿌리는 돈이 0 이상 이어야한다");
+            throw new ApiSystemException(ErrorCode.IS_MONEY_LESS_THAN_ZERO);
         }
         if(this.personCount <= 0) {
-            throw new RuntimeException("받을 인원이 0 이상 이어야한다");
+            throw new ApiSystemException(ErrorCode.IS_PERSON_COUNT_GREATER_THAN_ZERO);
         }
     }
 

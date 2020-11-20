@@ -74,7 +74,10 @@ public class ThrowingMoney {
     }
 
     public BigDecimal getTotalReceivingMoney() {
-        return this.receivingMoneyList.stream().map(ReceivingMoney::getMoney).reduce(BigDecimal::add).get();
+        return this.receivingMoneyList.stream()
+                .map(ReceivingMoney::getMoney)
+                .reduce(BigDecimal::add)
+                .orElse(BigDecimal.ZERO);
     }
 
 }

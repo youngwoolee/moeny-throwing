@@ -1,5 +1,7 @@
 package com.pay.money.throwing.repository;
 
+import com.pay.money.throwing.error.exception.ApiSystemException;
+import com.pay.money.throwing.error.ErrorCode;
 import com.pay.money.throwing.service.pojo.ReceivingMoneyDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -30,7 +32,7 @@ public class RedisRepository {
 
     public void validateExpiredKey(final String key) {
         if (ObjectUtils.isEmpty(redisTemplate.opsForValue().get(key))) {
-            throw new RuntimeException("해당 뿌린돈이 유효 하지 않습니다");
+            throw new ApiSystemException(ErrorCode.IS_EXPIRED_RECEIVE_DATE);
         }
     }
 }

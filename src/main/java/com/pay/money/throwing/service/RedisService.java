@@ -5,9 +5,6 @@ import com.pay.money.throwing.repository.RedisRepository;
 import com.pay.money.throwing.service.pojo.ReceivingMoneyDto;
 import com.pay.money.throwing.util.RandomMoneyDistributor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -19,9 +16,6 @@ public class RedisService {
 
     private final RedisRepository redisRepository;
     private final RandomMoneyDistributor randomDistributor;
-
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
 
     public void validateExpiredKey(final String key) {
         redisRepository.validateExpiredKey(key);
