@@ -1,6 +1,5 @@
 package com.pay.money.throwing.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -67,6 +66,15 @@ public class ThrowingMoney {
 
     public boolean isExpired(int expiredDay) {
         return LocalDateTime.now().minusDays(expiredDay).isAfter(this.createdAt);
+    }
+
+    public boolean isReceived(Long userId) {
+        return this.getReceivingMoneyList().stream()
+                .anyMatch(receivingMoney -> userId.equals(receivingMoney.getUserId()));
+    }
+
+    public BigDecimal getTotalReceivingMoney() {
+        return this.receivingMoneyList.stream().map(ReceivingMoney::getMoney).reduce(BigDecimal::add).get();
     }
 
 }

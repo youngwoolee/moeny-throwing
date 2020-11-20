@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Entity
-@Table(indexes = {@Index(name = "room_user_index",unique = true, columnList="roomId, userId")})
+@Table(indexes = {@Index(name = "throw_money_id_user_index",unique = true, columnList="throwing_money_id, userId")})
 public class ReceivingMoney {
 
     @Id

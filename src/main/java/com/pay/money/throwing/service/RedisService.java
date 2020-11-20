@@ -1,37 +1,41 @@
 package com.pay.money.throwing.service;
 
+import com.pay.money.throwing.endpoint.controller.request.ThrowingMoneyRequest;
+import com.pay.money.throwing.repository.RedisRepository;
 import com.pay.money.throwing.service.pojo.ReceivingMoneyDto;
+import com.pay.money.throwing.util.RandomMoneyDistributor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
-import java.util.concurrent.TimeUnit;
+import java.math.BigDecimal;
+import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class RedisService {
 
-    private static final int EXPIRE_MINUTES = 30;
+    private final RedisRepository redisRepository;
+    private final RandomMoneyDistributor randomDistributor;
 
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
-    public void set(String key, Object value) {
-        ValueOperations<String, Object> vop = redisTemplate.opsForValue();
-        vop.set(key, value, EXPIRE_MINUTES, TimeUnit.SECONDS);
+    public void validateExpiredKey(final String key) {
+        redisRepository.validateExpiredKey(key);
     }
 
-    public ReceivingMoneyDto get(String key) {
-        ValueOperations<String, Object> vop = redisTemplate.opsForValue();
-        ReceivingMoneyDto receivingMoneyDto = (ReceivingMoneyDto) vop.get(key);
+    public void setDistributeMoney(String token, Long userId, String roomId, ThrowingMoneyRequest throwingMoneyRequest) {
+        List<BigDecimal> distributeMoney = randomDistributor.distribute(throwingMoneyRequest.getMoney(), throwingMoneyRequest.getPersonCount());
+        ReceivingMoneyDto receivingMoneyDto = ReceivingMoneyDto.of(userId, roomId, distributeMoney);
+        redisRepository.set(token, receivingMoneyDto);
+    }
+
+    public ReceivingMoneyDto getReceivingMoneyDto(Long userId, String roomId, String token) {
+        ReceivingMoneyDto receivingMoneyDto = redisRepository.get(token);
+        receivingMoneyDto.validateNotSameUserAndSameRoom(userId, roomId);
         return receivingMoneyDto;
     }
-
-    public void validateExpiredKey(final String key) {
-        if (ObjectUtils.isEmpty(redisTemplate.opsForValue().get(key))) {
-            throw new RuntimeException("해당 뿌린돈이 유효 하지 않습니다");
-        }
-    }
-
 }

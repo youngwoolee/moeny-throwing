@@ -1,6 +1,6 @@
 package com.pay.money.throwing.endpoint.controller.response;
 
-import com.pay.money.throwing.domain.ReceivingMoney;
+import com.pay.money.throwing.domain.ThrowingMoney;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,18 +15,17 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ThrowingMoneyResponse {
-    private LocalDateTime createdAt;
+    private LocalDateTime throwingDate;
     private BigDecimal throwingMoney;
     private BigDecimal receivingMoney;
     private List<ReceivingMoneyResponse> receivingMoneyList;
 
-    public static ThrowingMoneyResponse valueOf(LocalDateTime createdAt, BigDecimal throwingMoney, List<ReceivingMoney> receivingMoneyList) {
-        BigDecimal receivingMoney = receivingMoneyList.stream().map(ReceivingMoney::getMoney).reduce(BigDecimal::add).get();
+    public static ThrowingMoneyResponse of(ThrowingMoney throwingMoney) {
         return ThrowingMoneyResponse.builder()
-                    .createdAt(createdAt)
-                    .throwingMoney(throwingMoney)
-                    .receivingMoney(receivingMoney)
-                    .receivingMoneyList(ReceivingMoneyResponse.from(receivingMoneyList))
+                    .throwingDate(throwingMoney.getCreatedAt())
+                    .throwingMoney(throwingMoney.getMoney())
+                    .receivingMoney(throwingMoney.getTotalReceivingMoney())
+                    .receivingMoneyList(ReceivingMoneyResponse.from(throwingMoney.getReceivingMoneyList()))
                 .build();
     }
 
