@@ -1,6 +1,5 @@
 package com.pay.money.throwing.service;
 
-import com.pay.money.throwing.domain.ReceivingMoney;
 import com.pay.money.throwing.domain.ThrowingMoney;
 import com.pay.money.throwing.endpoint.controller.request.ThrowingMoneyRequest;
 import com.pay.money.throwing.endpoint.controller.response.ThrowingMoneyResponse;
@@ -13,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
@@ -41,30 +39,9 @@ public class ThrowingService {
         return tokenGenerator.generate();
     }
 
-    private void save(ThrowingMoney throwingMoney) {
-        throwingRepository.save(throwingMoney);
-    }
-
-
     @Transactional
-    public BigDecimal receiving(Long userId, String roomId, String token) {
-
-        distributeService.validateExpiredKey(token);
-
-        distributeService.validateUserAndRoom(userId, roomId, token);
-
-        ThrowingMoney findThrowingMoney = throwingReadRepository.findByToken(token)
-                .orElseThrow(ErrorCode.IS_NOT_EXIST_THROWING_MONEY::exception);
-
-        validationService.receiveUser(userId, findThrowingMoney);
-
-        BigDecimal distributeMoney = distributeService.getDistributeMoney(token);
-
-        ReceivingMoney saveReceivingMoney = ReceivingMoney.of(userId, roomId, distributeMoney, findThrowingMoney);
-
-        findThrowingMoney.addReceivingMoney(saveReceivingMoney);
-
-        return saveReceivingMoney.getMoney();
+    public void save(ThrowingMoney throwingMoney) {
+        throwingRepository.save(throwingMoney);
     }
 
     public ThrowingMoneyResponse show(Long userId, String roomId, String token) {

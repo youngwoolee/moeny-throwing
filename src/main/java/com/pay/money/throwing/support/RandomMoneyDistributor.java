@@ -10,15 +10,13 @@ public class RandomMoneyDistributor implements MoneyDistributor {
 
     @Override
     public List<BigDecimal> distribute(BigDecimal money, int personCount) {
+        Random random = new Random();
         long[] rateArr = new long[personCount];
         long moneyToLong = money.longValue();
 
         int sum = 0;
-        for (int i = 0; i < personCount - 1; i++)
-        {
+        for (int i = 0; i < personCount - 1; i++) {
             int bound = (int)(moneyToLong - sum) / 2;
-
-            Random random = new Random();
             rateArr[i] = bound >= 1 ?  random.nextInt(bound) + 1 : 0L;
             sum += rateArr[i];
         }

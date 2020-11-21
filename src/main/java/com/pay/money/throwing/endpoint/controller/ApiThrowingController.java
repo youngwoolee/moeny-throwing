@@ -3,6 +3,7 @@ package com.pay.money.throwing.endpoint.controller;
 import com.pay.money.throwing.constant.HeaderName;
 import com.pay.money.throwing.endpoint.controller.request.ThrowingMoneyRequest;
 import com.pay.money.throwing.endpoint.controller.response.ThrowingMoneyResponse;
+import com.pay.money.throwing.service.ReceivingService;
 import com.pay.money.throwing.service.ThrowingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ public class ApiThrowingController {
 
 
     private final ThrowingService throwingService;
+    private final ReceivingService receivingService;
 
     @PostMapping("/money/throwing")
     public String throwing(@RequestHeader(HeaderName.USER_ID) Long userId,
@@ -32,7 +34,7 @@ public class ApiThrowingController {
                                 @RequestHeader(HeaderName.ROOM_ID) String roomId,
                                 @RequestHeader(HeaderName.TOKEN) String token) {
 
-        BigDecimal money = throwingService.receiving(userId, roomId, token);
+        BigDecimal money = receivingService.receiving(userId, roomId, token);
         return money;
     }
 
