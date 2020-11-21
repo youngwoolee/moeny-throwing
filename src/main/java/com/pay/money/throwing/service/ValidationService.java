@@ -3,6 +3,7 @@ package com.pay.money.throwing.service;
 import com.pay.money.throwing.domain.ThrowingMoney;
 import com.pay.money.throwing.error.ErrorCode;
 import com.pay.money.throwing.error.exception.ApiSystemException;
+import com.pay.money.throwing.service.pojo.UserAndRoomDto;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,10 +17,8 @@ public class ValidationService {
         }
     }
 
-    public void sameUserAndExpired(Long userId, ThrowingMoney throwingMoney) {
-        if(!throwingMoney.isSameUser(userId)) {
-            throw new ApiSystemException(ErrorCode.CAN_SHOW_ONLY_OWNER);
-        }
+    public void sameUserAndExpired(UserAndRoomDto userAndRoom, ThrowingMoney throwingMoney) {
+        userAndRoom.validateSameUser(throwingMoney.getUserId());
 
         if(throwingMoney.isExpired(EXPIRE_DAY)) {
             throw new ApiSystemException(ErrorCode.IS_EXPIRED_SHOW_DATE);

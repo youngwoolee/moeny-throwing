@@ -45,13 +45,6 @@ class ThrowingMoneyTest {
         }
     }
 
-    @DisplayName("동일 유저인지 판단")
-    @ParameterizedTest
-    @CsvSource(value = {"1:true", "2:false", "3:false"}, delimiter = ':')
-    public void isSameUser(Long userId, boolean expected) {
-        assertThat(throwingMoney.isSameUser(userId)).isEqualTo(expected);
-    }
-
     @DisplayName("받은 금액 총금액 계산")
     @Test
     public void getTotalReceivingMoney() {

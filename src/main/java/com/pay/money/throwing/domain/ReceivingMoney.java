@@ -43,4 +43,13 @@ public class ReceivingMoney {
         this.throwingMoney = throwingMoney;
     }
 
+    public static ReceivingMoney of(Long userId, String roomId, BigDecimal distributeMoney, ThrowingMoney throwingMoney) {
+        return ReceivingMoney.builder()
+                .roomId(roomId)
+                .money(distributeMoney)
+                .userId(userId)
+                .createdAt(LocalDateTime.now())
+                .throwingMoney(throwingMoney)
+                .build();
+    }
 }
