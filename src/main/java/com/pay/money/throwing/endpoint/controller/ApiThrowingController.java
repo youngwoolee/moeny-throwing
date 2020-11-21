@@ -22,7 +22,6 @@ public class ApiThrowingController {
     public String throwing(@RequestHeader(HeaderName.USER_ID) Long userId,
                            @RequestHeader(HeaderName.ROOM_ID) String roomId,
                            @RequestBody @Valid ThrowingMoneyRequest throwingMoneyRequest) {
-        throwingMoneyRequest.validationThenException();
         String token = throwingService.throwing(userId, roomId, throwingMoneyRequest);
 
         return token;

@@ -1,4 +1,4 @@
-package com.pay.money.throwing.util;
+package com.pay.money.throwing.support;
 
 public interface TokenGeneratorStrategy {
     String generate();

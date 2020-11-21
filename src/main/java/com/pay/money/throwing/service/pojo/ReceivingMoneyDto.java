@@ -54,7 +54,7 @@ public class ReceivingMoneyDto implements Serializable {
                 .roomId(roomId)
                 .money(this.getDistributeMoney(sequence))
                 .userId(userId)
-                .updatedAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now())
                 .throwingMoney(throwingMoney)
                 .build();
     }

@@ -1,4 +1,4 @@
-package com.pay.money.throwing.util;
+package com.pay.money.throwing.support;
 
 import org.apache.commons.lang3.RandomStringUtils;
 

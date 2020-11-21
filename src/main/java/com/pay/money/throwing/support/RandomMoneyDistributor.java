@@ -1,4 +1,4 @@
-package com.pay.money.throwing.util;
+package com.pay.money.throwing.support;
 
 import java.math.BigDecimal;
 import java.util.Arrays;

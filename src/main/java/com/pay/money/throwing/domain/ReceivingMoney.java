@@ -28,18 +28,18 @@ public class ReceivingMoney {
     private Long userId;
 
     @Column(nullable = false)
-    private LocalDateTime updatedAt;
+    private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "throwing_money_id")
     private ThrowingMoney throwingMoney;
 
     @Builder
-    public ReceivingMoney(String roomId, BigDecimal money, Long userId, LocalDateTime updatedAt, ThrowingMoney throwingMoney) {
+    public ReceivingMoney(String roomId, BigDecimal money, Long userId, LocalDateTime createdAt, ThrowingMoney throwingMoney) {
         this.roomId = roomId;
         this.money = money;
         this.userId = userId;
-        this.updatedAt = updatedAt;
+        this.createdAt = createdAt;
         this.throwingMoney = throwingMoney;
     }
 

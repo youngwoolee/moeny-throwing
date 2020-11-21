@@ -1,9 +1,9 @@
 package com.pay.money.throwing.config;
 
 import com.pay.money.throwing.interceptor.HeaderInterceptor;
-import com.pay.money.throwing.util.RandomMoneyDistributor;
-import com.pay.money.throwing.util.RandomTokenGenerator;
-import com.pay.money.throwing.util.TokenGeneratorStrategy;
+import com.pay.money.throwing.support.RandomMoneyDistributor;
+import com.pay.money.throwing.support.RandomTokenGenerator;
+import com.pay.money.throwing.support.TokenGeneratorStrategy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

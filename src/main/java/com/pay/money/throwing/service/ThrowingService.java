@@ -4,13 +4,11 @@ import com.pay.money.throwing.domain.ReceivingMoney;
 import com.pay.money.throwing.domain.ThrowingMoney;
 import com.pay.money.throwing.endpoint.controller.request.ThrowingMoneyRequest;
 import com.pay.money.throwing.endpoint.controller.response.ThrowingMoneyResponse;
-import com.pay.money.throwing.error.exception.ApiSystemException;
 import com.pay.money.throwing.error.ErrorCode;
-import com.pay.money.throwing.repository.ReceivingRepository;
 import com.pay.money.throwing.repository.ThrowingReadRepository;
 import com.pay.money.throwing.repository.ThrowingRepository;
 import com.pay.money.throwing.service.pojo.ReceivingMoneyDto;
-import com.pay.money.throwing.util.TokenGeneratorStrategy;
+import com.pay.money.throwing.support.TokenGeneratorStrategy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

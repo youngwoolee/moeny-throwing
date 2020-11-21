@@ -1,12 +1,11 @@
 package com.pay.money.throwing.endpoint.controller.request;
 
 import com.pay.money.throwing.domain.ThrowingMoney;
-import com.pay.money.throwing.error.exception.ApiSystemException;
-import com.pay.money.throwing.error.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
@@ -16,22 +15,11 @@ import java.math.BigDecimal;
 public class ThrowingMoneyRequest {
 
     @NotNull
+    @Min(value = 1, message = "뿌리는 돈이 0 이상 이어야한다")
     private BigDecimal money;
     @NotNull
+    @Min(value = 1, message = "받을 인원이 0 이상 이어야한다")
     private Integer personCount;
-
-    public void validationThenException() {
-        if(isMoneyLessThanZero()) {
-            throw new ApiSystemException(ErrorCode.IS_MONEY_LESS_THAN_ZERO);
-        }
-        if(this.personCount <= 0) {
-            throw new ApiSystemException(ErrorCode.IS_PERSON_COUNT_GREATER_THAN_ZERO);
-        }
-    }
-
-    private boolean isMoneyLessThanZero() {
-        return (BigDecimal.ZERO).compareTo(money) >= 0;
-    }
 
     public ThrowingMoney toEntity(Long userId, String roomId, String token) {
         return ThrowingMoney.builder()
