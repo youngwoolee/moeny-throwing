@@ -9,12 +9,14 @@ import com.pay.money.throwing.repository.ThrowingRepository;
 import com.pay.money.throwing.service.pojo.UserAndRoomDto;
 import com.pay.money.throwing.support.TokenGeneratorStrategy;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ThrowingService {
 
     private final TokenGeneratorStrategy tokenGenerator;
@@ -26,7 +28,6 @@ public class ThrowingService {
     public String throwing(Long userId, String roomId, ThrowingMoneyRequest throwingMoneyRequest) {
         UserAndRoomDto userAndRoom = UserAndRoomDto.of(userId, roomId);
 
-        //TODO: token 중복 체크
         String token = createToken();
 
         distributeService.saveUserAndRoomAndDistributeMoney(token, userAndRoom, throwingMoneyRequest);
@@ -40,8 +41,10 @@ public class ThrowingService {
     }
 
     @Transactional
-    public void save(ThrowingMoney throwingMoney) {
-        throwingRepository.save(throwingMoney);
+    public ThrowingMoney save(ThrowingMoney throwingMoney) {
+        ThrowingMoney saveThrowingMoney = throwingRepository.save(throwingMoney);
+        log.info("success throwing money [userId: {}, roomId: {}, money: {}]", throwingMoney.getUserId(), throwingMoney.getRoomId(), throwingMoney.getMoney());
+        return saveThrowingMoney;
     }
 
     public ThrowingMoneyResponse show(Long userId, String roomId, String token) {

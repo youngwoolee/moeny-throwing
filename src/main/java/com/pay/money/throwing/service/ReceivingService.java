@@ -7,6 +7,7 @@ import com.pay.money.throwing.repository.ReceivingRepository;
 import com.pay.money.throwing.repository.ThrowingReadRepository;
 import com.pay.money.throwing.service.pojo.UserAndRoomDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -14,6 +15,7 @@ import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ReceivingService {
 
     private final ReceivingRepository receivingRepository;
@@ -24,6 +26,7 @@ public class ReceivingService {
     @Transactional
     public void save(ReceivingMoney receivingMoney) {
         receivingRepository.save(receivingMoney);
+        log.info("success receiving money [userId: {}, roomId: {}, money: {}]", receivingMoney.getUserId(), receivingMoney.getRoomId(), receivingMoney.getMoney());
     }
 
     public BigDecimal receiving(Long userId, String roomId, String token) {

@@ -22,7 +22,6 @@ public class RedisRepository {
     @Resource(name = "redisTemplate")
     private ListOperations<String, Object> listOperations;
 
-
     public void set(String key, Object value) {
         valueOperations.set(key, value, EXPIRE_MINUTES, TimeUnit.MINUTES);
     }
