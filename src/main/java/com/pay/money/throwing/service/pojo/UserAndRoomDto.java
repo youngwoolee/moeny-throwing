@@ -23,7 +23,7 @@ public class UserAndRoomDto implements Serializable {
         return new UserAndRoomDto(userId, roomId);
     }
 
-    public void validateNotSameUserAndSameRoom(Long userId, String roomId) {
+    public void validateNotSameUserAndSameRoom(final Long userId, final String roomId) {
         if(this.userId.equals(userId)) {
             throw new ApiSystemException(ErrorCode.CAN_RECEIVE_ONLY_OWNER);
         }
@@ -33,7 +33,7 @@ public class UserAndRoomDto implements Serializable {
         }
     }
 
-    public void validateSameUser(Long userId) {
+    public void validateSameUser(final Long userId) {
         if(!this.userId.equals(userId)) {
             throw new ApiSystemException(ErrorCode.CAN_SHOW_ONLY_OWNER);
         }

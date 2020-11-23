@@ -1,6 +1,5 @@
 package com.pay.money.throwing.domain;
 
-import com.pay.money.throwing.service.pojo.UserAndRoomDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,9 +38,6 @@ public class ThrowingMoney {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(nullable = false)
-    private boolean isExpired;
-
     @OneToMany(mappedBy = "throwingMoney", fetch = FetchType.LAZY)
     private List<ReceivingMoney> receivingMoneyList = new ArrayList<>();
 
@@ -54,18 +50,17 @@ public class ThrowingMoney {
         this.money = money;
         this.personCount = personCount;
         this.createdAt = LocalDateTime.now();
-        this.isExpired = false;
     }
 
     public void addReceivingMoney(ReceivingMoney receivingMoneyList) {
         this.receivingMoneyList.add(receivingMoneyList);
     }
 
-    public boolean isExpired(int expiredDay) {
+    public boolean isExpired(final int expiredDay) {
         return LocalDateTime.now().minusDays(expiredDay).isAfter(this.createdAt);
     }
 
-    public boolean isReceived(Long userId) {
+    public boolean isReceived(final Long userId) {
         return this.getReceivingMoneyList().stream()
                 .anyMatch(receivingMoney -> userId.equals(receivingMoney.getUserId()));
     }

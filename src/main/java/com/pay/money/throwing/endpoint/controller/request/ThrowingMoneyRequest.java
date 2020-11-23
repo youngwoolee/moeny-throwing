@@ -21,7 +21,7 @@ public class ThrowingMoneyRequest {
     @Min(value = 1, message = "받을 인원이 0 이상 이어야한다")
     private Integer personCount;
 
-    public ThrowingMoney toEntity(Long userId, String roomId, String token) {
+    public ThrowingMoney toEntity(final Long userId, final String roomId, final String token) {
         return ThrowingMoney.builder()
                 .userId(userId)
                 .roomId(roomId)

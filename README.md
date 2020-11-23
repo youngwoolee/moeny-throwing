@@ -36,6 +36,68 @@
 - 뿌린 사람 자신만 조회를 할 수 있습니다. 다른사람의 뿌리기건이나 유효하지 않은 token에 대해서는 조회 실패 응답이 내려가야 합니다.
 - 뿌린 건에 대한 조회는 7일 동안 할 수 있습니다.
 
+
+## 문제 해결 전략
+
+ - 뿌리는돈과 총 받은돈이 일치하기위해 동시성 문제 고려
+     - 뿌리기 요청이 들어오면 userId, roomId를 레디스 키 {token}에 저장하고 TTL 설정으로 만료시간을 체크한다
+     - 동시에 미리 분배할 돈을 레디스 키 {token}:moneys List 자료구조에 저장 해놓는다(동시성 문제 방지)
+     - 받기 요청이 들어올때 redis에서 분배되어진 돈을 순서대로 POP해서 가져오고 받은돈 테이블에 저장한다 
+ 
+ 
+## 실행 전 로컬 환경 세팅
+
+ - 도커 redis 이미지 불러오기
+```
+docker pull redis
+```
+
+ - redis 컨테이너 생성
+```
+docker run --name {컨테이너 이름} -d -p 6379:6379 redis
+```
+
+ - redis 컨테이너 실행
+```
+docker start {컨테이너 이름}
+```
+
+ - QDomain 생성용 빌드 스크립트 실행
+```
+gradle task compileQuerydsl
+```
+
+## 프로젝트 명세
+
+### 스펙
+> - Gradle 6.6.1
+> - Spring boot 2.4.0
+> - JPA 2.4.0
+> - Querydsl 4.4.0
+> - Redis 2.4.0
+> - H2 Database 1.4.200
+
+### erd
+
+![](images/erd.png)
+
+throwing_money 뿌린돈 테이블
+
+ - [pk] id: pk (auto increment)
+ - userId: 뿌린 사용자 id
+ - roomId: 뿌린 대화방 id
+ - token: 고유 토큰
+ - money: 뿌릴 금액
+ - person_count: 뿌릴 인원
+ - created_at: 뿌린 시각
+
+receiving_money 받은돈 테이블
+ - [pk] id: pk (auto increment)
+ - [fk] throwing_money_id: 뿌리기 건 pk
+ - money: 받은 금액
+ - userId: 받은 사용자 id
+
+
 ## API 명세
 | Method | API | Parameter | Header | 기능 | 요약 |
 |:---:|:---:|:---:|:---:|:---:|:---:| 
@@ -199,32 +261,3 @@ Date: Sun, 22 Nov 2020 08:34:20 GMT
     - [x] 뿌린 사람만 조회 가능하고 다른사람일 경우 실패 응답을 내려준다
     - [x] 7일동안 조회 가능하고 지나면 실패 응답을 내려준다
     
-    
-## 문제 해결 전략
-
- - 뿌리기에 정보를 레디스 키 {token}에 저장하고 TTL 설정으로 만료시간을 체크한다
- - 미리 분배할 돈을 레디스 키 {token}:moneys 에 저장 해놓는다
- - 받기할때 redis에서 분배되어진 돈을 가져오고 받은돈 테이블에 저장한다 
- 
- 
-## 실행 전 로컬 환경 세팅
-
- - 도커 redis 이미지 불러오기
-```
-docker pull redis
-```
-
- - redis 컨테이너 생성
-```
-docker run --name {컨테이너 이름} -d -p 6379:6379 redis
-```
-
- - redis 컨테이너 실행
-```
-docker start {컨테이너 이름}
-```
-
- - QDomain 생성용 빌드 스크립트 실행
-```
-gradle task compileQuerydsl
-```
