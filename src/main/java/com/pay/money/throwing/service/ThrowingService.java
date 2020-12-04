@@ -8,10 +8,12 @@ import com.pay.money.throwing.repository.ThrowingReadRepository;
 import com.pay.money.throwing.repository.ThrowingRepository;
 import com.pay.money.throwing.service.pojo.UserAndRoomDto;
 import com.pay.money.throwing.support.TokenGeneratorStrategy;
+import com.sun.xml.internal.ws.api.model.CheckedException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.management.relation.RoleUnresolved;
 import javax.transaction.Transactional;
 
 @Service
@@ -25,6 +27,7 @@ public class ThrowingService {
     private final DistributeService distributeService;
     private final ValidationService validationService;
 
+    @Transactional
     public String throwing(Long userId, String roomId, ThrowingMoneyRequest throwingMoneyRequest) {
         UserAndRoomDto userAndRoom = UserAndRoomDto.of(userId, roomId);
 
@@ -32,19 +35,13 @@ public class ThrowingService {
 
         distributeService.saveUserAndRoomAndDistributeMoney(token, userAndRoom, throwingMoneyRequest);
 
-        save(throwingMoneyRequest.toEntity(userId, roomId, token));
+        ThrowingMoney saveThrowingMoney = throwingRepository.save(throwingMoneyRequest.toEntity(userId, roomId, token));
+        log.info("success throwing money [userId: {}, roomId: {}, money: {}]", saveThrowingMoney.getUserId(), saveThrowingMoney.getRoomId(), saveThrowingMoney.getMoney());
         return token;
     }
 
     private String createToken() {
         return tokenGenerator.generate();
-    }
-
-    @Transactional
-    public ThrowingMoney save(ThrowingMoney throwingMoney) {
-        ThrowingMoney saveThrowingMoney = throwingRepository.save(throwingMoney);
-        log.info("success throwing money [userId: {}, roomId: {}, money: {}]", throwingMoney.getUserId(), throwingMoney.getRoomId(), throwingMoney.getMoney());
-        return saveThrowingMoney;
     }
 
     public ThrowingMoneyResponse show(Long userId, String roomId, String token) {

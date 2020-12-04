@@ -24,11 +24,6 @@ public class ReceivingService {
     private final ValidationService validationService;
 
     @Transactional
-    public void save(ReceivingMoney receivingMoney) {
-        receivingRepository.save(receivingMoney);
-        log.info("success receiving money [userId: {}, roomId: {}, money: {}]", receivingMoney.getUserId(), receivingMoney.getRoomId(), receivingMoney.getMoney());
-    }
-
     public BigDecimal receiving(Long userId, String roomId, String token) {
         UserAndRoomDto userAndRoom = UserAndRoomDto.of(userId, roomId);
 
@@ -43,8 +38,8 @@ public class ReceivingService {
 
         ReceivingMoney distributeReceiveMoney = distributeService.getDistributeReceiveMoney(userAndRoom, token, findThrowingMoney);
 
-        save(distributeReceiveMoney);
-
+        ReceivingMoney saveReceivingMoney = receivingRepository.save(distributeReceiveMoney);
+        log.info("success receiving money [userId: {}, roomId: {}, money: {}]", saveReceivingMoney.getUserId(), saveReceivingMoney.getRoomId(), saveReceivingMoney.getMoney());
         return distributeReceiveMoney.getMoney();
     }
 }
